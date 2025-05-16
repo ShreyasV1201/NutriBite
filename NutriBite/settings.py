@@ -11,21 +11,25 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
-from decouple import config
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY') 
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
 
@@ -80,11 +84,11 @@ WSGI_APPLICATION = 'NutriBite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'NutriBite',       # The schema you created
-        'USER': 'root',
-        'PASSWORD': 'mysql',
-        'HOST': '127.0.0.1',          # Or 'localhost'
-        'PORT': '3306',               # Default MySQL port
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -142,11 +146,7 @@ AUTH_USER_MODEL = 'auth.User'
  
 # look for .env in your project root
 
-# this must run before reading SPOONACULAR_API_KEY below:
-env_path = BASE_DIR / ".env"
-
-
-USDA_API_KEY = config('USDA_API_KEY')
+USDA_API_KEY = os.getenv('USDA_API_KEY')
 FDC_BASE_URL = "https://api.nal.usda.gov/fdc/v1"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
