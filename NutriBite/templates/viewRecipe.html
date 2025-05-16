@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container py-4">
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+      {# Category & Area #}
+      <p><strong>Category:</strong> {{ meal.strCategory }}</p>
+      <p><strong>Area:</strong> {{ meal.strArea }}</p>
+
+      {# Title #}
+      <h2 class="mb-3">{{ meal.strMeal }}</h2>
+
+      {# Single full‑width image #}
+      <img
+        src="{{ meal.strMealThumb }}"
+        alt="{{ meal.strMeal }}"
+        class="img-fluid rounded mb-4"
+      >
+
+      {# Ingredients #}
+      <h4>Ingredients</h4>
+      <ul>
+        {% for ing in ingredients %}
+          <li>{{ ing.name }} — {{ ing.measure }}</li>
+        {% endfor %}
+      </ul>
+
+      {# Instructions #}
+      <h4>Instructions</h4>
+      <p>{{ meal.strInstructions }}</p>
+
+      {# Optional YouTube video link #}
+      {% if meal.strYoutube %}
+        <h5>Video Tutorial</h5>
+        <a href="{{ meal.strYoutube }}" target="_blank">
+          Watch on YouTube
+        </a>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% load static %}
+{% load i18n %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/apple-icon.png' %}" />
+  <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" />
+  <title>NutriBite Dashboard</title>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
+
+  <!-- Nucleo Icons -->
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+  <!-- Slick Carousel CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+
+  <!-- Main CSS -->
+  <link id="pagestyle" href="{% static 'assets/css/soft-ui-dashboard.css' %}?v=1.1.0" rel="stylesheet" />
+
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css"
+  integrity="sha512‑…"
+  crossorigin="anonymous"
+/>
+  {% block styles %}
+<style>
+  /* Sidebar: float harder above the content */
+  .sidenav {
+    position: relative;
+    z-index: 2000;                /* even higher */
+    background-color: #f4f4f4;
+    border-radius: 16px;          /* extra-smooth corners */
+    padding-top: 1rem;
+    /* a deeper, wider shadow */
+    box-shadow: 4px 0 16px rgba(0,0,0,0.2);
+    /* slide it further into the main area */
+    transform: translateX(12px);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+
+  /* on hover, it “pops” even more */
+  .sidenav:hover {
+    transform: translateX(16px);
+    box-shadow: 6px 0 24px rgba(0,0,0,0.25);
+  }
+
+  /* Active link stays bold and orange */
+  .sidenav .nav-link.active {
+    background-color: #ff6f00;
+    color: #fff;
+    border-radius: 8px;
+  }
+
+  /* Sidebar links default & hover */
+  .sidenav .nav-link {
+    color: #333;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .sidenav .nav-link:hover {
+    background-color: #e2e2e2;
+  }
+
+  /* Main content sits underneath */
+  main.main-content {
+    position: relative;
+    z-index: 1;
+    background-color: #f8f9fa;
+    padding: 2rem;
+  }
+</style>
+{% endblock %}
+
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+  <!-- ─── SIDEBAR ────────────────────────────────────────────────────────── -->
+   {% if not hide_sidebar %}
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3"
+         id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+         aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href="{% url 'dashboard' %}">
+        <img src="{% static 'assets/img/nb-logo.png' %}" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold">NutriBite</span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+
+        <!-- Dashboard -->
+        <li class="nav-item">
+         <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <title>shop</title>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g transform="translate(-1716.000000, -439.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <g transform="translate(1716.000000, 291.000000)">
+                      <g transform="translate(0.000000, 148.000000)">
+                        <path class="color-background opacity-6" d="M46.7199583,10.7414583 L40.8449583,0.949791667 C40.4909749,0.360605034 39.8540131,0 39.1666667,0 L7.83333333,0 C7.1459869,0 6.50902508,0.360605034 6.15504167,0.949791667 L0.280041667,10.7414583 C0.0969176761,11.0460037 -1.23209662e-05,11.3946378 -1.23209662e-05,11.75 C-0.00758042603,16.0663731 3.48367543,19.5725301 7.80004167,19.5833333 L7.81570833,19.5833333 C9.75003686,19.5882688 11.6168794,18.8726691 13.0522917,17.5760417 C16.0171492,20.2556967 20.5292675,20.2556967 23.494125,17.5760417 C26.4604562,20.2616016 30.9794188,20.2616016 33.94575,17.5760417 C36.2421905,19.6477597 39.5441143,20.1708521 42.3684437,18.9103691 C45.1927731,17.649886 47.0084685,14.8428276 47.0000295,11.75 C47.0000295,11.3946378 46.9030823,11.0460037 46.7199583,10.7414583 Z"></path>
+                        <path class="color-background" d="M39.198,22.4912623 C37.3776246,22.4928106 35.5817531,22.0149171 33.951625,21.0951667 L33.92225,21.1107282 C31.1430221,22.6838032 27.9255001,22.9318916 24.9844167,21.7998837 C24.4750389,21.605469 23.9777983,21.3722567 23.4960833,21.1018359 L23.4745417,21.1129513 C20.6961809,22.6871153 17.4786667,22.9344611 14.5386667,21.7998837 C14.029926,21.6054643 13.533337,21.3722507 13.0522917,21.1018359 C11.4250962,22.0190609 9.63246555,22.4947009 7.81570833,22.4912623 C7.16510551,22.4842162 6.51607673,22.4173045 5.875,22.2911849 L5.875,44.7220845 C5.875,45.9498589 6.7517757,46.9451667 7.83333333,46.9451667 L19.5833333,46.9451667 L19.5833333,33.6066734 L27.4166667,33.6066734 L27.4166667,46.9451667 L39.1666667,46.9451667 C40.2482243,46.9451667 41.125,45.9498589 41.125,44.7220845 L41.125,22.2822926 C40.4887822,22.4116582 39.8442868,22.4815492 39.198,22.4912623 Z"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+
+<!-- Browse Recipes -->
+<li class="nav-item">
+   <a class="nav-link {% if request.resolver_match.url_name == 'browse_recipes' %}active{% endif %}" href="{% url 'browse_recipes' %}">
+    <div
+      class="icon icon-shape icon-sm shadow border-radius-md bg-white
+             text-center me-2 d-flex align-items-center justify-content-center"
+    >
+      <!-- cookbook SVG -->
+      <svg width="12px" height="12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- cover -->
+        <rect x="2" y="3" width="18" height="18" rx="2" ry="2"/>
+        <!-- spine -->
+        <path d="M6 3v18"/>
+        <!-- page lines -->
+        <path d="M8 9h8"/>
+        <path d="M8 15h8"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Browse Recipes</span>
+  </a>
+</li>
+
+  <!-- Add Recipe -->
+<li class="nav-item">
+  <a
+    class="nav-link {% if request.resolver_match.url_name == 'add_recipe' %}active{% endif %}"
+    href="{% url 'add_recipe' %}"
+  >
+    <div
+      class="icon icon-shape icon-sm shadow border-radius-md bg-white
+             text-center me-2 d-flex align-items-center justify-content-center"
+    >
+      <!-- book + plus SVG -->
+      <svg width="12px" height="12px" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"
+           xmlns="http://www.w3.org/2000/svg">
+        <!-- book cover -->
+        <rect x="2" y="3" width="18" height="18" rx="2" ry="2"/>
+        <!-- spine -->
+        <path d="M6 3v18"/>
+        <!-- plus sign -->
+        <path d="M12 10v4"/>
+        <path d="M10 12h4"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Add Recipe</span>
+  </a>
+</li>
+
+<!-- Nutrition Info -->
+<li class="nav-item">
+  <a
+    class="nav-link {% if request.resolver_match.url_name == 'nutrition_info' %}active{% endif %}"
+    href="{% url 'nutrition_info' %}  "
+  >
+    <div
+      class="icon icon-shape icon-sm shadow border-radius-md bg-white
+             text-center me-2 d-flex align-items-center justify-content-center"
+    >
+      <!-- Banana SVG -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#343a40" viewBox="0 0 24 24">
+        <path d="M21.706 15.291a7.456 7.456 0 0 1-1.823.325 11.975 11.975 0 0 1-1.547-.068c-2.882-.347-5.48-2.159-6.903-4.712-.155-.29-.476-.483-.82-.48-.4.005-.728.243-.847.602a8.24 8.24 0 0 0-.472 2.93c0 1.66.473 3.248 1.36 4.641 1.394 2.227 3.709 3.704 6.32 4.054a8.13 8.13 0 0 0 4.418-.602c.363-.153.6-.49.599-.88a.876.876 0 0 0-.465-.758 8.073 8.073 0 0 1-.82-.652c-.43-.408-.81-.856-1.101-1.32.679-.3 1.344-.69 1.969-1.183.313-.244.445-.655.342-1.032a.875.875 0 0 0-1.21-.607Z"/>
+        <path d="M9.102 9.228a.75.75 0 0 0 .057-.986 8.203 8.203 0 0 1-1.354-2.505c-.25-.791-.407-1.61-.468-2.436A.75.75 0 0 0 6.46 2.597C3.794 3.706 2.25 5.93 2.25 8.394c0 .685.087 1.353.258 1.994.503 1.886 1.7 3.534 3.315 4.674a.75.75 0 0 0 1.107-.284 8.192 8.192 0 0 1 2.172-2.63.75.75 0 0 0 0-1.173 8.14 8.14 0 0 1-.615-.66l.615-.661Z"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Nutrition Info</span>
+  </a>
+</li>
+
+
+
+<!-- Log out -->
+<li class="nav-item">
+  <form action="{% url 'sign_out' %}" method="POST" class="d-flex">
+    {% csrf_token %}
+    <button type="submit" class="nav-link d-flex align-items-center p-2">
+      <div
+        class="icon icon-shape icon-sm shadow border-radius-md bg-white
+               text-center me-2 d-flex align-items-center justify-content-center"
+      >
+        <!-- clean right-arrow exit icon -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16" height="16"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6.646 4.646a.5.5 0 0 1 .708 0L11.707 9l-4.353 4.354a.5.5 0 1 1-.707-.708L10.293 9 6.646 5.354a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      </div>
+      <span class="nav-link-text">Log out</span>
+    </button>
+  </form>
+</li>
+
+      </ul>
+    </div>
+  </aside>
+{% endif %}
+  <!-- ─── MAIN CONTENT ─────────────────────────────────────────────────────── -->
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ─── SCRIPTS ───────────────────────────────────────────────────────────── -->
+<!-- Core JS Files -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery MUST come first -->
+<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Plugins -->
+<script src="{% static 'assets/js/plugins/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/smooth-scrollbar.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/chartjs.min.js' %}"></script>
+
+<!-- Slick Carousel JS -->
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<!-- Main JS -->
+<script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}?v=1.1.0"></script>
+
+
+  <!-- 5) Page-specific scripts: now jQuery, Bootstrap, plugins, and Slick are all loaded -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>
+ {% block extra_scripts %}
+ {% endblock %}
+</body>
+</html>
+

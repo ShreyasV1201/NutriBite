@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container py-4">
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+      {# Category & Area #}
+      <p><strong>Category:</strong> {{ meal.strCategory }}</p>
+      <p><strong>Area:</strong> {{ meal.strArea }}</p>
+
+      {# Title #}
+      <h2 class="mb-3">{{ meal.strMeal }}</h2>
+
+      {# Image at 50% width on all screens #}
+      <img
+        src="{{ meal.strMealThumb }}"
+        alt="{{ meal.strMeal }}"
+        class="img-fluid rounded mb-4"
+        style="width: 50%; height: auto;"
+      >
+
+      {# Ingredients #}
+      <h4>Ingredients</h4>
+      <ul>
+        {% for i in 1|to:20 %}
+          {% with ing=meal|getattr:"strIngredient"|add:i measure=meal|getattr:"strMeasure"|add:i %}
+            {% if ing and ing|length > 0 %}
+              <li>{{ ing }} — {{ measure }}</li>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+      </ul>
+
+      {# Instructions #}
+      <h4>Instructions</h4>
+      <p>{{ meal.strInstructions }}</p>
+
+      {# Favourite / Unfavourite button #}
+      <form method="post" action="{% url 'toggle_favourite_mealdb' meal.idMeal %}">
+        {% csrf_token %}
+        {% if meal.idMeal in favourited_ids %}
+          <button type="submit" class="btn btn-danger">Unfavourite</button>
+        {% else %}
+          <button type="submit" class="btn btn-primary">Favourite</button>
+        {% endif %}
+      </form>
+
+      {# Optional YouTube video link #}
+      {% if meal.strYoutube %}
+        <h5 class="mt-4">Video Tutorial</h5>
+        <a href="{{ meal.strYoutube }}" target="_blank">Watch on YouTube</a>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

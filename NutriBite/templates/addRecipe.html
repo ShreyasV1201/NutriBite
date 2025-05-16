@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <!-- Page-specific styles -->
+  <style>
+    /* Extra-smooth corners on cards and form controls */
+    .card.rounded-3,
+    .form-control.rounded-3 {
+      border-radius: 1rem !important;
+    }
+  </style>
+
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">Add a New Recipe</h1>
+
+    <!-- Form Card -->
+    <div class="card mb-5 rounded-3 shadow-sm">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <!-- Title -->
+          <div class="row mb-4 align-items-center">
+            <label for="{{ form.title.id_for_label }}"
+                   class="col-sm-2 col-form-label">
+              {{ form.title.label }}
+            </label>
+            <div class="col-sm-10">
+              {{ form.title }}
+              {{ form.title.errors }}
+            </div>
+          </div>
+
+          <!-- Ingredients -->
+          <div class="row mb-4 align-items-start">
+            <label for="{{ form.ingredients.id_for_label }}"
+                   class="col-sm-2 col-form-label">
+              {{ form.ingredients.label }}
+            </label>
+            <div class="col-sm-10">
+              {{ form.ingredients }}
+              {{ form.ingredients.errors }}
+            </div>
+          </div>
+
+          <!-- Preparation -->
+          <div class="row mb-4 align-items-start">
+            <label for="{{ form.preparation.id_for_label }}"
+                   class="col-sm-2 col-form-label">
+              {{ form.preparation.label }}
+            </label>
+            <div class="col-sm-10">
+              {{ form.preparation }}
+              {{ form.preparation.errors }}
+            </div>
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary rounded-3">
+              Add Recipe
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Display Added Recipes -->
+    <div class="row g-4" id="recipes-container">
+      {% for r in recipes %}
+  <div class="col-md-6">
+    <div class="card h-100 rounded-3 shadow-sm">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ r.title }}</h5>
+
+              <h6 class="mt-3">Ingredients:</h6>
+<ul class="list-unstyled mb-3 ps-0">
+  {% for line in r.ingredients.splitlines %}
+    <li>{{ line }}</li>
+  {% endfor %}
+</ul>
+
+
+              <h6>Preparation:</h6>
+              <p class="flex-grow-1">{{ r.preparation }}</p>
+
+              <div class="mt-3 d-flex justify-content-end">
+                <button
+  type="button"
+  class="btn btn-sm btn-outline-secondary me-2 rounded-3"
+  data-bs-toggle="modal"
+  data-bs-target="#editModal"
+  data-id="{{ r.id }}"
+  data-title="{{ r.title|escapejs }}"
+  data-ingredients="{{ r.ingredients|escapejs }}"
+  data-prep="{{ r.preparation|escapejs }}"
+>
+  Edit
+</button>
+
+
+</button>
+                <button
+  type="button"
+  class="btn btn-sm btn-outline-danger rounded-3"
+  data-bs-toggle="modal"
+  data-bs-target="#deleteModal"
+  data-id="{{ r.id }}"
+  data-title="{{ r.title|escapejs }}"
+>
+  Delete
+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <p class="text-muted">No recipes added yet.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- EDIT RECIPE MODAL -->
+<div 
+  class="modal fade" 
+  id="editModal" 
+  tabindex="-1" 
+  aria-labelledby="editModalLabel" 
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Recipe</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="edit-title" class="form-label">Title</label>
+            <input 
+              type="text" 
+              class="form-control rounded-3" 
+              id="edit-title" 
+              name="title" 
+              required
+            >
+          </div>
+          <div class="mb-3">
+            <label for="edit-ingredients" class="form-label">Ingredients</label>
+            <textarea 
+              class="form-control rounded-3" 
+              id="edit-ingredients" 
+              name="ingredients" 
+              rows="4" 
+              required
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="edit-preparation" class="form-label">Preparation</label>
+            <textarea 
+              class="form-control rounded-3" 
+              id="edit-preparation" 
+              name="preparation" 
+              rows="6" 
+              required
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary rounded-3" 
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-success rounded-3"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Recipe</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="deleteForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <p>Do you want to delete <strong id="del-recipe-title"></strong>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary rounded-3"
+                  data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit"
+                  class="btn btn-danger rounded-3">
+            Yes, delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const editModal = document.getElementById('editModal');
+  editModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const btn = event.relatedTarget;
+    const id  = btn.getAttribute('data-id');
+    const title = btn.getAttribute('data-title');
+    const ingredients = btn.getAttribute('data-ingredients');
+    const prep = btn.getAttribute('data-prep');
+
+    // Form & fields inside the modal
+    const form = document.getElementById('editForm');
+    form.action = `/edit-recipe/${id}/`;        // match your URLconf
+    form.querySelector('#edit-title').value = title;
+    form.querySelector('#edit-ingredients').value = ingredients;
+    form.querySelector('#edit-preparation').value = prep;
+  });
+</script>
+<script>
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', event => {
+    const btn   = event.relatedTarget;
+    const id    = btn.getAttribute('data-id');
+    const title = btn.getAttribute('data-title');
+
+    // set form action to the delete view
+    const form = deleteModal.querySelector('#deleteForm');
+    form.action = `/delete-recipe/${id}/`;
+
+    // inject the recipe title into the confirmation text
+    deleteModal.querySelector('#del-recipe-title').textContent = title;
+  });
+</script>
+
+
+{% endblock %}

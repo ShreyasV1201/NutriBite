@@ -1,0 +1,66 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sign In | NutriBite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'assets/css/soft-ui-dashboard.css' %}?v=1.1.0" />
+</head>
+<body class="bg-gray-100">  
+{% block content %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
+    <h2 class="text-center mb-4">Sign In for NutriBite</h2>
+    <p class="text-center text-secondary mb-4">
+      Create your account to start tracking nutrition
+    </p>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Please correct the error{% if form.errors|length > 1 %}s{% endif %} below.
+      </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.username.label_tag }}
+    {{ form.username }}
+  </div>
+  <div class="mb-3">
+    {{ form.password.label_tag }}
+    {{ form.password }}
+  </div>
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      name="remember"
+      id="id_remember"
+    >
+    <label class="form-check-label" for="id_remember">Remember me</label>
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Sign In</button>
+</form>
+
+
+    <p class="text-center mt-3 small">
+      Don't have an account?
+      <a href="{% url 'sign_up' %}">Sign up</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+
+  <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+  <script src="{% static 'assets/js/plugins/perfect-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/js/plugins/smooth-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}?v=1.1.0"></script>
+</body>
+</html>

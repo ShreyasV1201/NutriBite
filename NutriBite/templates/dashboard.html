@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% block styles %}
+<style>
+  /* Trending arrows (existing) */
+  #trendingCarousel .carousel-control-prev,
+  #trendingCarousel .carousel-control-next {
+    width: 3rem;
+    height: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+  }
+  #trendingCarousel .carousel-control-prev { left: -1.5rem; }
+  #trendingCarousel .carousel-control-next { right: -1.5rem; }
+  #trendingCarousel .carousel-control-prev-icon,
+  #trendingCarousel .carousel-control-next-icon {
+    filter: invert(1);
+    width: 1.5rem;
+    height: 1.5rem;
+    background-size: 100%, 100%;
+  }
+
+  /* Fun Facts arrows (same styling) */
+  #funFactsCarousel .carousel-control-prev,
+  #funFactsCarousel .carousel-control-next {
+    width: 3rem;
+    height: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+  }
+  #funFactsCarousel .carousel-control-prev { left: -1.5rem; }
+  #funFactsCarousel .carousel-control-next { right: -1.5rem; }
+  #funFactsCarousel .carousel-control-prev-icon,
+  #funFactsCarousel .carousel-control-next-icon {
+    filter: invert(1);
+    width: 1.5rem;
+    height: 1.5rem;
+    background-size: 100%, 100%;
+  }
+
+    .fun-facts-card .card-header {
+    background-color: #ff6f00;
+    padding-top: 1.3rem;
+    padding-bottom: 1.3rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  .fun-facts-card .card-header h6 {
+    color: #000;
+  }
+
+   .fun-facts-card .card-body {
+    padding-top: 2rem;  /* bump this value up or down to taste */
+  }
+
+  .slider-wrapper { position: relative; }
+
+.slider-wrapper .tns-controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 10;    /* <- bring the whole control container above the slides */
+}
+
+.slider-wrapper .tns-controls button {
+  pointer-events: all;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 11;    /* <- ensure buttons sit even higher */
+}
+
+</style>
+{% endblock %}
+
+  <!-- Navbar with Sign In on the far right -->
+  <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
+       id="navbarBlur" navbar-scroll="true">
+    <div class="container-fluid py-1 px-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+          <li class="breadcrumb-item text-sm">
+            <a class="opacity-5 text-dark" href="javascript:;">Pages</a>
+          </li>
+          <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+        </ol>
+        <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+      </nav>
+
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+      </div>
+    </div>
+  </nav>
+  
+<!--Fun facts-->
+<div class="container-fluid py-4">
+  <div class="card fun-facts-card mb-4">
+    <div class="card-header">
+      <h6 class="mb-0">Fun Facts</h6>
+    </div>
+    <div class="card-body">
+      <div id="funFactsCarousel"
+           class="carousel slide"
+           data-bs-ride="carousel"
+           data-bs-interval="6000">
+        <div class="carousel-inner text-center">
+          {% for fact in trivia_list %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <p class="mb-0">{{ fact }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Trending Recipes Card -->
+<div class="container-fluid py-4">
+  <div class="card mb-4">
+    <div class="card-header pb-0">
+      <h6 class="mb-0">Trending Recipes</h6>
+    </div>
+    <div class="card-body">
+
+      <!-- Tiny‑Slider container (just one) -->
+    <div class="slider-wrapper position-relative">
+      <div class="my-slider">
+        {% for recipe in trending %}
+          <div class="px-1">
+            <div class="card h-100">
+              <img src="{{ recipe.image }}"
+                   class="card-img-top"
+                   alt="{{ recipe.title }}">
+              <div class="card-body p-2 d-flex flex-column">
+                <h6 class="card-title mb-2">
+                  {{ recipe.title|truncatechars:25 }}
+                </h6>
+                <a href="{{ recipe.sourceUrl }}"
+                   class="mt-auto btn btn-sm btn-primary w-100">
+                  View Recipe
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+      {% block extra_scripts %}
+      <script>
+document.addEventListener('DOMContentLoaded', function () {
+  tns({
+    container: '.my-slider',
+    items: 5,
+    slideBy: 1,
+    gutter: 16,
+    controls: true,      // show buttons
+    nav: false,          // hide dots
+    autoplay: true,
+    autoplayButtonOutput: false,
+    controlsText: ['‹','›'] // optional: use chevrons
+  });
+});
+</script>
+      {% endblock %}
+
+    </div>
+  </div>
+</div>
+
+   {# … your fun‑facts card here … #}
+
+<!-- Your Favourites -->
+{% if user.is_authenticated and favorites %}
+  <div class="card mb-4">
+    <div class="card-header pb-0">
+      <h6 class="mb-0">Your Favourites</h6>
+    </div>
+    <div class="card-body">
+      <div class="row row-cols-1 row-cols-md-3 g-3">
+        {% for fav in favorites %}
+          <div class="col">
+            <div class="card h-100">
+              {% if fav.image %}
+                <img src="{{ fav.image }}"
+                     class="card-img-top"
+                     alt="{{ fav.title }}">
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h6 class="card-title">{{ fav.title }}</h6>
+                <div class="mt-auto d-flex gap-2">
+                  {# View button #}
+                  <a href="{% url 'view_recipe' mealdb_id=fav.mealdb_id %}"
+                     class="btn btn-sm btn-outline-secondary flex-fill text-center">
+                    View Recipe
+                  </a>
+                  {# Remove form posting to toggle_favourite #}
+                  <form method="post"
+                        action="{% url 'toggle_favourite' %}"
+                        class="flex-fill">
+                    {% csrf_token %}
+                    <input type="hidden" name="mealdb_id" value="{{ fav.mealdb_id }}">
+                    <button type="submit"
+                            class="btn btn-sm btn-danger w-100">
+                      Remove
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+  </div>
+{% endblock %}
