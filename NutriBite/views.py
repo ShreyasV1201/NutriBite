@@ -8,6 +8,8 @@ from django.core.cache      import cache
 from django.urls            import reverse, reverse_lazy
 from django.http            import HttpResponseBadRequest
 from django.conf            import settings
+from django.core.cache import cache
+
 
 import requests, random
 
@@ -210,16 +212,31 @@ def browse_recipes(request):
 # —————————————————————————————————————————————————————————————
 
 def search_usda(query):
+    query = query.strip().lower()
+    cache_key = f"usda_{query}"
+
+    data = cache.get(cache_key)
+
+    if data:
+        print("✅ CACHE HIT")
+        return data
+
+    print("❌ CACHE MISS")
+
     url = f"{settings.FDC_BASE_URL}/foods/search"
     params = {
         "api_key": settings.USDA_API_KEY,
-        "query":   query,
+        "query": query,
         "pageSize": 12,
     }
+
     resp = requests.get(url, params=params, timeout=5)
     resp.raise_for_status()
-    return resp.json().get("foods", [])
+    data = resp.json().get("foods", [])
 
+    cache.set(cache_key, data, timeout=60*60)
+
+    return data
 
 def nutrition_info(request):
     q         = request.GET.get("q", "").strip()

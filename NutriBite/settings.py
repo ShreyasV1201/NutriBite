@@ -11,27 +11,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-from dotenv import load_dotenv
 import os
-
-load_dotenv()
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-mlue0_(r1+=2qmi)ab$bmoxk50u4#w929a0x5wiz&*s46z-z#x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -84,11 +80,11 @@ WSGI_APPLICATION = 'NutriBite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'NutriBite',       # The schema you created
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'HOST': '127.0.0.1',          # Or 'localhost'
+        'PORT': '3306',               # Default MySQL port
     }
 }
 
@@ -111,6 +107,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-nutribite",
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -145,16 +147,18 @@ LOGIN_URL = '/sign-in/'                # also good to have this set
 AUTH_USER_MODEL = 'auth.User'  
  
 # look for .env in your project root
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
-USDA_API_KEY = os.getenv('USDA_API_KEY')
+# this must run before reading SPOONACULAR_API_KEY below:
+env_path = BASE_DIR / ".env"
+    # DEBUG
+load_dotenv(env_path)
+
+USDA_API_KEY = "LGFVzTtE4DPY78USy2T7Kk4KZXowzf5FKzqyQb39"
 FDC_BASE_URL = "https://api.nal.usda.gov/fdc/v1"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_URL = '/media/'
