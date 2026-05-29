@@ -102,12 +102,6 @@ python app.py
 
 ---
 
-## Screenshots
-
-*Add screenshots or demo GIFs here*
-
----
-
 ## Learning Outcomes
 
 * Applied machine learning to a real-world healthcare use case
